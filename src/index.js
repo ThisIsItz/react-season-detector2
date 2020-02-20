@@ -8,19 +8,32 @@ class App extends React.Component {
         super(props);
         
         // state object
-        this.state= { lat: null };
+        this.state= { lat: null,
+                      errorMessage: ''
+                    };
+
+        window.navigator.geolocation.getCurrentPosition(
+            position => {
+                // We called setState
+                this.setState({ lat: position.coords.latitude });
+
+                // We did NOT
+                // this.state.lat = position.coords.latitude;
+            },
+            err => this.setState({ errorMessage: err.message })
+        );
     }
 
     // React says we have to define render!!
-    render() {
-        window.navigator.geolocation.getCurrentPosition(
-            (position) => console.log(position),
-            (err) => console.log(err, "error")
-        );
-        
-        return <div>Latitude: </div>
+    render() { 
+        return (
+            <div>
+                Latitude: {this.state.lat}
+                <br/>
+                Error: {this.state.errorMessage}
+            </div>
+        )
     }
-
 }
 
 ReactDOM.render(
